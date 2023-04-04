@@ -1,4 +1,4 @@
 HOST="localhost"
-USER="yourusername"
-PASSWORD="yourpassword"
+USER="root"
+PASSWORD=""
 DATABASE_NAME="mom_server"

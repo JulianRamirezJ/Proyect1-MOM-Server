@@ -31,6 +31,22 @@ class Topic:
         conn.execute(query)     
         result = conn.fetchall()
         return result
+
+    def user_is_subscribed(self, user_id):
+        conn = get_cursor()
+        query = "SELECT * FROM subscribers_topic WHERE topic_id = %s AND user_id = %s"
+        params = (self.id, user_id)
+        conn.execute(query, params)
+        result = conn.fetchall()
+        return len(result) > 0
+
+    def get_all_suscribed_users(self):
+        conn = get_cursor()
+        query = "SELECT u.* FROM suscribers_topic st INNER JOIN users u ON st.user_id = u.id WHERE st.topic_id = %s"
+        params = (self.id,)
+        conn.execute(query, params)
+        result = conn.fetchall()
+        return result
     
     def save(self):
         try:

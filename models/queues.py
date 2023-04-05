@@ -25,12 +25,28 @@ class Queue:
         return result
     
     @staticmethod
-    def get_all_topics():
+    def get_all_queues():
         conn = get_cursor()
         query = "SELECT * FROM queues"
         conn.execute(query)     
         result = conn.fetchall()
         return result
+
+    def get_all_suscribed_users(self):
+        conn = get_cursor()
+        query = "SELECT u.* FROM suscribers_queue sq INNER JOIN users u ON sq.user_id = u.id WHERE sq.queue_id = %s"
+        params = (self.id,)
+        conn.execute(query, params)
+        result = conn.fetchall()
+        return result
+
+    def user_is_subscribed(self, user_id):
+        conn = get_cursor()
+        query = "SELECT * FROM suscribers_queue WHERE queue_id = %s AND user_id = %s"
+        params = (self.id, user_id)
+        conn.execute(query, params)
+        result = conn.fetchall()
+        return len(result) > 0
     
     def save(self):
         try:

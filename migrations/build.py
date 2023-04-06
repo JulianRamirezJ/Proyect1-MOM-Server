@@ -9,11 +9,11 @@ mydb = mysql.connector.connect(
 )
 
 tables = ["users", "topics", "queues",
-        "suscribers_queue","suscribers_topic",
+        "suscribers_queue","topics_queue",
         "messages_queue","messages_topic"]
 
 table_files = ["users.py", "topics.py", "queues.py",
-            "suscribers_queue.py","suscribers_topic.py",
+            "suscribers_queue.py","topics_queue.py",
             "messages_queue.py","messages_topic.py"]
 
 cursor = mydb.cursor()

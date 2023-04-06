@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+//Topics
+service TopicService {
+    rpc Create(TopicRequest) returns (TopicResponse) {}
+    rpc Delete(TopicRequest) returns (TopicResponse) {}
+    rpc ListTopics(TopicRequest) returns (TopicResponseList) {}
+    rpc SubscribeTopic(TopicRequest) returns (TopicResponse) {}
+    rpc PublishTopic(TopicRequestMessage) returns (TopicResponse) {}
+    rpc ConsumeTopic(TopicRequest) returns (TopicResponseMessage) {}
+}
+
+message TopicRequest {
+    string key = 1;
+    optional string topic_name = 2;
+}
+
+message TopicResponse {
+    sint32 code = 1;  
+}
+
+message TopicResponseList {
+    sint32 code = 1;
+    repeated string topics = 2;
+}
+
+message TopicRequestMessage {
+    string key = 1;
+    string topic_name = 2;
+    string message = 3;
+}
+
+message TopicResponseMessage {
+    sint32 code = 1;
+    string message = 2;
+}
+
+//Queues
+service QueueService {
+    rpc Create(QueueRequest) returns (QueueResponse) {}
+    rpc Delete(QueueRequest) returns (QueueResponse) {}
+    rpc ListQueues(QueueRequest) returns (QueueResponseList) {}
+    rpc SubscribeQueue(QueueRequest) returns (QueueResponse) {}
+    rpc PublishQueue(QueueRequestMessage) returns (QueueResponse) {}
+    rpc ConsumeQueue(QueueRequest) returns (QueueResponseMessage) {}
+}
+
+message QueueRequest {
+    string key = 1;
+    optional string queue_name = 2;
+}
+
+message QueueResponse {
+    sint32 code = 1;  
+}
+
+message QueueResponseList {
+    sint32 code = 1;
+    repeated string queues = 2;
+}
+
+message QueueRequestMessage {
+    string key = 1;
+    string queue_name = 2;
+    string message = 3;
+}
+
+message QueueResponseMessage {
+    sint32 code = 1;
+    string message = 2;
+}

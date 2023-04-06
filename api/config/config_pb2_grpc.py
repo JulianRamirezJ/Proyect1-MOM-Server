@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import config_pb2 as config__pb2
+import config.config_pb2 as config__pb2
 
 
 class TopicServiceStub(object):

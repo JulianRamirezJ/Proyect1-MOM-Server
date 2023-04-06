@@ -1,37 +1,10 @@
 from concurrent import futures
 
 import grpc
-import config_pb2
 import config_pb2_grpc
+from topics import Topic
+from queues import Queue
 
-
-class Topic(config_pb2_grpc.TopicServiceServicer):
-    def create(self, request, context):
-        return config_pb2.TopicResponse(code=200)
-    def delete(self, request, context):
-        return config_pb2.TopicResponse(code=200)
-    def listTopics(self, request, context):
-        return config_pb2.TopicResponseList(code=200, topics=[])
-    def subscribeTopic(self, request, context):
-        return config_pb2.TopicResponse(code=200)
-    def publishTopic(self, request, context):
-        return config_pb2.TopicResponse(code=200)
-    def consumeTopic(self, request, context):
-        return config_pb2.TopicResponseMessage(code=200, message='')
-    
-class Queue(config_pb2_grpc.QueueServiceServicer):
-    def create(self, request, context):
-        return config_pb2.QueueResponse(code=200)
-    def delete(self, request, context):
-        return config_pb2.QueueResponse(code=200)
-    def listTopics(self, request, context):
-        return config_pb2.QueueResponseList(code=200, queues=[])
-    def subscribeTopic(self, request, context):
-        return config_pb2.QueueResponse(code=200)
-    def publishTopic(self, request, context):
-        return config_pb2.QueueResponse(code=200)
-    def consumeTopic(self, request, context):
-        return config_pb2.QueueResponseMessage(code=200, message='')
 
 def serve():
     port = '50051'

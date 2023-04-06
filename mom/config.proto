@@ -1,5 +1,19 @@
 syntax = "proto3";
 
+//Users
+service UserService{
+    rpc Create(Null) returns(UserResponse){}
+}
+
+message UserResponse{
+    string key = 1;
+    sint32 code = 2;
+}
+
+message Null{
+
+}
+
 //Topics
 service TopicService {
     rpc Create(TopicRequest) returns (TopicResponse) {}

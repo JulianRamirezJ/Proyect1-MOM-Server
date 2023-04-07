@@ -32,6 +32,9 @@ class Topic:
         result = conn.fetchall()
         return result
 
+    def get_name(self):
+        return self.name
+
 
     def get_all_suscribed_users(self):
         conn = get_cursor()
@@ -60,17 +63,17 @@ class Topic:
     def save(self):
         try:
             cursor = get_cursor()
-            sql = "INSERT INTO topics (name, user_id) VALUES (%s, %s)"
-            val = (self.name, self.user_id)
+            sql = "INSERT INTO topics (name, user_id) SELECT %s, %s WHERE NOT EXISTS (SELECT 1 FROM topics WHERE name = %s) LIMIT 1"
+            val = (self.name, self.user_id, self.name)
             cursor.execute(sql, val)
             get_connection().commit()
         except Exception as e:
-            print(f"Error while saving user: {e}") 
+            print(f"Error while saving user: {e}")
         
         
     def delete(self):
         conn = get_cursor()
-        sql = "DELETE FROM topics WHERE id = %s"
-        val = (self.id,)
+        sql = "DELETE FROM topics WHERE name = %s"
+        val = (self.name,)
         conn.execute(sql, val)
         get_connection().commit()

@@ -20,6 +20,9 @@ class User:
         result = conn.fetchall()
         return result
 
+    def get_id(self):
+        return self.id
+
     def get_all_suscribed_topics(self):
         conn = get_cursor()
         query = "SELECT t.* FROM topics t INNER JOIN topics_queue st ON t.id = st.topic_id WHERE st.suscriber_id = %s"
@@ -44,8 +47,9 @@ class User:
             val = (topic_name,)
             cursor.execute(sql, val)
             topic_id = cursor.fetchone()[0]
-            sql = "INSERT INTO topics_queue (topic_id, suscriber_id) VALUES (%s, %s)"
-            val = (topic_id, self.id)
+            name = f"{self.id}_{topic_name}"
+            sql = "INSERT INTO topics_queue (name, topic_id, suscriber_id) VALUES (%s, %s, %s)"
+            val = (name, topic_id, self.id)
             cursor.execute(sql, val)
             get_connection().commit()
         except Exception as e:
@@ -58,14 +62,14 @@ class User:
             val = (queue_name,)
             cursor.execute(sql, val)
             queue_id = cursor.fetchone()[0]
-            sql = "INSERT INTO suscribers_queue (topic_id, suscriber_id) VALUES (%s, %s)"
+            sql = "INSERT INTO suscribers_queue (queue_id, suscriber_id) VALUES (%s, %s)"
             val = (queue_id, self.id)
             cursor.execute(sql, val)
             get_connection().commit()
         except Exception as e:
             print(f"Error while saving suscriber: {e}")
 
-    def desuscribe_topic(self, topic_name):
+    def desubscribe_topic(self, topic_name):
         cursor = get_cursor()
         sql = "SELECT id FROM topics WHERE name = %s"
         val = (topic_name,)
@@ -76,7 +80,7 @@ class User:
         cursor.execute(sql, val)
         get_connection().commit()
 
-    def desuscribe_queue(self, queue_name):
+    def desubscribe_queue(self, queue_name):
         cursor = get_cursor()
         sql = "SELECT id FROM queues WHERE name = %s"
         val = (queue_name,)
@@ -97,6 +101,7 @@ class User:
             self.id = cursor.lastrowid
         except Exception as e:
             print(f"Error while saving user: {e}")
+            
         
     def delete(self):
         conn = get_cursor()

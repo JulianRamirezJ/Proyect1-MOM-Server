@@ -45,8 +45,10 @@ class MessageTopic:
             val = (self.message, self.topic_queue_id)
             cursor.execute(sql, val)
             get_connection().commit()
+            self.id = cursor.lastrowid
         except Exception as e:
-            print(f"Error while saving message: {e}") 
+            print(f"Error while saving message: {e}")
+
 
     def update_status(self):
         cursor = get_cursor()

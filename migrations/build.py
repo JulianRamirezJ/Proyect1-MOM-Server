@@ -34,6 +34,11 @@ for i, table in enumerate(tables):
             elif len(col) == 4:
                 create_table += f"  {col[0]} {col[1]} {col[2]} {col[3]},\n"
 
-        create_table = create_table[:-2] + "\n)"
+        for foreign_key in foreign_keys:
+            column_name, referenced_table = foreign_key
+            create_table += f"  FOREIGN KEY ({column_name}) REFERENCES {referenced_table} (id) ON DELETE CASCADE,\n"
+
+        create_table = create_table[:-2] + "\n)"    
+        print(create_table)
         cursor.execute(create_table)
         mydb.commit()

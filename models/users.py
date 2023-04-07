@@ -6,7 +6,7 @@ class User:
         self.id = id
     
     @staticmethod
-    def get_by_id(id):
+    def get_by_id(id):  
         conn = get_cursor()
         conn.execute("SELECT * FROM users WHERE id = %s", (id,))
         result = conn.fetchone()
@@ -20,9 +20,12 @@ class User:
         result = conn.fetchall()
         return result
 
+    def get_id(self):
+        return self.id
+
     def get_all_suscribed_topics(self):
         conn = get_cursor()
-        query = "SELECT t.* FROM topics t INNER JOIN suscribers_topic st ON t.id = st.topic_id WHERE st.user_id = %s"
+        query = "SELECT t.* FROM topics t INNER JOIN topics_queue st ON t.id = st.topic_id WHERE st.suscriber_id = %s"
         params = (self.id,)
         conn.execute(query, params)
         result = conn.fetchall()
@@ -30,44 +33,62 @@ class User:
 
     def get_all_suscribed_queues(self):
         conn = get_cursor()
-        query = "SELECT q.* FROM queues q INNER JOIN suscribers_queue sq ON q.id = sq.queue_id WHERE sq.user_id = %s"
+        query = "SELECT q.* FROM queues q INNER JOIN suscribers_queue sq ON q.id = sq.queue_id WHERE sq.suscriber_id = %s"
         params = (self.id,)
         conn.execute(query, params)
         result = conn.fetchall()
         return result
     
-    def suscribe_topic(self, topic_id):
+
+    def subscribe_topic(self, topic_name):
         try:
             cursor = get_cursor()
-            sql = "INSERT INTO suscribers_topic (topic_id, user_id) VALUES (%s, %s)"
-            val = (topic_id, self.id)
+            sql = "SELECT id FROM topics WHERE name = %s"
+            val = (topic_name,)
+            cursor.execute(sql, val)
+            topic_id = cursor.fetchone()[0]
+            name = f"{self.id}_{topic_name}"
+            sql = "INSERT INTO topics_queue (name, topic_id, suscriber_id) VALUES (%s, %s, %s)"
+            val = (name, topic_id, self.id)
             cursor.execute(sql, val)
             get_connection().commit()
         except Exception as e:
-            print(f"Error while saving suscriber: {e}") 
+            print(f"Error while saving suscriber: {e}")
 
-    def suscribe_queue(self, queue_id):
+    def subscribe_queue(self, queue_name):
         try:
             cursor = get_cursor()
-            sql = "INSERT INTO suscribers_queue (queue_id, user_id) VALUES (%s, %s)"
+            sql = "SELECT id FROM queues WHERE name = %s"
+            val = (queue_name,)
+            cursor.execute(sql, val)
+            queue_id = cursor.fetchone()[0]
+            sql = "INSERT INTO suscribers_queue (queue_id, suscriber_id) VALUES (%s, %s)"
             val = (queue_id, self.id)
             cursor.execute(sql, val)
             get_connection().commit()
         except Exception as e:
-            print(f"Error while saving suscriber: {e}") 
+            print(f"Error while saving suscriber: {e}")
 
-    def desuscribe_topic(self, topic_id):
-        conn = get_cursor()
-        sql = "DELETE FROM suscribers_topic WHERE user_id = %s AND topic_id = %s"
+    def desubscribe_topic(self, topic_name):
+        cursor = get_cursor()
+        sql = "SELECT id FROM topics WHERE name = %s"
+        val = (topic_name,)
+        cursor.execute(sql, val)
+        topic_id = cursor.fetchone()[0]
+        sql = "DELETE FROM topics_queue WHERE suscriber_id = %s AND topic_id = %s"
         val = (self.id, topic_id)
-        conn.execute(sql, val)
+        cursor.execute(sql, val)
         get_connection().commit()
 
-    def desuscribe_queue(self, queue_id):
-        conn = get_cursor()
-        sql = "DELETE FROM suscribers_queue WHERE user_id = %s AND queue_id = %s"
-        val = (self.id, queue_id)
-        conn.execute(sql, val)
+    def desubscribe_queue(self, queue_name):
+        cursor = get_cursor()
+        sql = "SELECT id FROM queues WHERE name = %s"
+        val = (queue_name,)
+        cursor.execute(sql, val)
+        topic_id = cursor.fetchone()[0]
+        sql = "DELETE FROM suscribers_queue WHERE suscriber_id = %s AND queue_id = %s"
+        val = (self.id, topic_id)
+        cursor.execute(sql, val)
         get_connection().commit()
 
     def save(self):
@@ -80,6 +101,7 @@ class User:
             self.id = cursor.lastrowid
         except Exception as e:
             print(f"Error while saving user: {e}")
+            
         
     def delete(self):
         conn = get_cursor()

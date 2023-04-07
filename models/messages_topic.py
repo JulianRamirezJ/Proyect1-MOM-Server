@@ -2,10 +2,11 @@ import mysql.connector
 from models.connection import get_connection, get_cursor
 
 class MessageTopic:
-    def __init__(self, message, topic_id, id=None):
+    def __init__(self, message, topic_queue_id, id=None, status=False):
         self.id = id
         self.message = message
-        self.topic_id = topic_id
+        self.status = status
+        self.topic_queue_id = topic_queue_id
 
     
     @staticmethod
@@ -13,16 +14,21 @@ class MessageTopic:
         conn = get_cursor()
         conn.execute("SELECT * FROM messages_topic WHERE id = %s", (id,))
         result = conn.fetchone()
-        return MessageTopic(result[1], result[2], result[0])
+        return MessageTopic(result[1], result[3], result[0], result[2])
 
     @staticmethod
-    def get_all_messages_from_topic(topic_id):
+    def get_all_messages_from_topic_queue(topic_queue_name):
         conn = get_cursor()
-        query = "SELECT * FROM messages_topic WHERE topic_id = %s"
-        params = (topic_id,)
+        query = """
+                    SELECT mt.* FROM messages_topic mt
+                    INNER JOIN topics_queue tq ON mt.topic_queue_id = tq.id 
+                    WHERE tq.name = %s
+                """
+        params = (topic_queue_name,)
         conn.execute(query, params)
         result = conn.fetchall()
         return result
+    
     
     @staticmethod
     def get_all_messages():
@@ -35,12 +41,21 @@ class MessageTopic:
     def save(self):
         try:
             cursor = get_cursor()
-            sql = "INSERT INTO messages_topic (message, topic_id) VALUES (%s, %s)"
-            val = (self.message, self.topic_id)
+            sql = "INSERT INTO messages_topic (message, topic_queue_id) VALUES (%s, %s)"
+            val = (self.message, self.topic_queue_id)
             cursor.execute(sql, val)
             get_connection().commit()
+            self.id = cursor.lastrowid
         except Exception as e:
-            print(f"Error while saving message: {e}") 
+            print(f"Error while saving message: {e}")
+
+
+    def update_status(self):
+        cursor = get_cursor()
+        sql = "UPDATE messages_topic SET status = True WHERE id = %s"
+        val = (self.id,)
+        cursor.execute(sql, val)
+        get_connection().commit()
         
         
     def delete(self):

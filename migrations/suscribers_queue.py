@@ -1,11 +1,14 @@
 
 table_name = "suscribers_queue"
 
-columns = [
+columns = [        
         ("id", "INT", "AUTO_INCREMENT", "PRIMARY KEY"),
-        ("queue_id", "INT",  f"REFERENCES queues(id) ON DELETE CASCADE"),
-        ("user_id", "VARCHAR(255)",  f"REFERENCES users(id) ON DELETE CASCADE")
+        ("queue_id", "INT", "NOT NULL"), 
+        ("suscriber_id", "VARCHAR(255)", "NOT NULL")]
+
+
+foreign_keys = [
+        ("queue_id", "queues"),
+        ("suscriber_id", "users")
 ]
-
-
 

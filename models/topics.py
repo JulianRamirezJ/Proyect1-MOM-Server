@@ -9,9 +9,9 @@ class Topic:
 
     
     @staticmethod
-    def get_by_id(id):
+    def get_by_name(name):
         conn = get_cursor()
-        conn.execute("SELECT * FROM topics WHERE id = %s", (id,))
+        conn.execute("SELECT * FROM topics WHERE name = %s", (name,))
         result = conn.fetchone()
         return Topic(result[1], result[2], result[0])
 
@@ -32,36 +32,48 @@ class Topic:
         result = conn.fetchall()
         return result
 
-    def user_is_subscribed(self, user_id):
-        conn = get_cursor()
-        query = "SELECT * FROM subscribers_topic WHERE topic_id = %s AND user_id = %s"
-        params = (self.id, user_id)
-        conn.execute(query, params)
-        result = conn.fetchall()
-        return len(result) > 0
+    def get_name(self):
+        return self.name
+
 
     def get_all_suscribed_users(self):
         conn = get_cursor()
-        query = "SELECT u.* FROM suscribers_topic st INNER JOIN users u ON st.user_id = u.id WHERE st.topic_id = %s"
-        params = (self.id,)
+        query = """
+                    SELECT u.* FROM topics_queue tq INNER JOIN users u 
+                    ON tq.suscriber_id = u.id INNER JOIN topics t 
+                    ON tq.queue_id = t.id WHERE t.name = %s
+                """
+        params = (self.name,)
         conn.execute(query, params)
         result = conn.fetchall()
         return result
+
+    def user_is_subscribed(self, suscriber_id):
+        conn = get_cursor()
+        query = """
+                    SELECT * FROM topics_queue 
+                    JOIN topics ON topics_queue.topic_id = topics.id 
+                    WHERE topics.name = %s AND suscriber_id = %s
+                """
+        params = (self.name, suscriber_id)
+        conn.execute(query, params)
+        result = conn.fetchall()
+        return len(result) > 0
     
     def save(self):
         try:
             cursor = get_cursor()
-            sql = "INSERT INTO topics (name, user_id) VALUES (%s, %s)"
-            val = (self.name, self.user_id)
+            sql = "INSERT INTO topics (name, user_id) SELECT %s, %s WHERE NOT EXISTS (SELECT 1 FROM topics WHERE name = %s) LIMIT 1"
+            val = (self.name, self.user_id, self.name)
             cursor.execute(sql, val)
             get_connection().commit()
         except Exception as e:
-            print(f"Error while saving user: {e}") 
+            print(f"Error while saving user: {e}")
         
         
     def delete(self):
         conn = get_cursor()
-        sql = "DELETE FROM topics WHERE id = %s"
-        val = (self.id,)
+        sql = "DELETE FROM topics WHERE name = %s"
+        val = (self.name,)
         conn.execute(sql, val)
         get_connection().commit()

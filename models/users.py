@@ -1,7 +1,7 @@
 import mysql.connector
 from models.connection import get_connection, get_cursor
 
-class User:
+class UserModel:
     def __init__(self, id):
         self.id = id
     
@@ -10,7 +10,7 @@ class User:
         conn = get_cursor()
         conn.execute("SELECT * FROM users WHERE id = %s", (id,))
         result = conn.fetchone()
-        return User(result[0])
+        return UserModel(result[0])
     
     @staticmethod
     def get_all_users():

@@ -1,7 +1,7 @@
 import mysql.connector
 from models.connection import get_connection, get_cursor
 
-class Topic:
+class TopicModel:
     def __init__(self, name, user_id, id=None):
         self.id = id
         self.name = name
@@ -13,7 +13,7 @@ class Topic:
         conn = get_cursor()
         conn.execute("SELECT * FROM topics WHERE name = %s", (name,))
         result = conn.fetchone()
-        return Topic(result[1], result[2], result[0])
+        return TopicModel(result[1], result[2], result[0])
 
     @staticmethod
     def get_all_topics_from_user(user_id):
@@ -39,9 +39,9 @@ class Topic:
     def get_all_suscribed_users(self):
         conn = get_cursor()
         query = """
-                    SELECT u.* FROM topics_queue tq INNER JOIN users u 
+                    SELECT tq.* FROM topics_queue tq INNER JOIN users u 
                     ON tq.suscriber_id = u.id INNER JOIN topics t 
-                    ON tq.queue_id = t.id WHERE t.name = %s
+                    ON tq.topic_id = t.id WHERE t.name = %s
                 """
         params = (self.name,)
         conn.execute(query, params)
@@ -67,6 +67,7 @@ class Topic:
             val = (self.name, self.user_id, self.name)
             cursor.execute(sql, val)
             get_connection().commit()
+            self.id = cursor.lastrowid
         except Exception as e:
             print(f"Error while saving user: {e}")
         

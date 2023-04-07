@@ -1,7 +1,7 @@
 import mysql.connector
 from models.connection import get_connection, get_cursor
 
-class MessageTopic:
+class MessageTopicModel:
     def __init__(self, message, topic_queue_id, id=None, status=False):
         self.id = id
         self.message = message
@@ -14,17 +14,17 @@ class MessageTopic:
         conn = get_cursor()
         conn.execute("SELECT * FROM messages_topic WHERE id = %s", (id,))
         result = conn.fetchone()
-        return MessageTopic(result[1], result[3], result[0], result[2])
+        return MessageTopicModel(result[1], result[3], result[0], result[2])
 
     @staticmethod
-    def get_all_messages_from_topic_queue(topic_queue_name):
+    def get_all_messages_from_topic_queue_not_read(topic_queue_id):
         conn = get_cursor()
         query = """
                     SELECT mt.* FROM messages_topic mt
                     INNER JOIN topics_queue tq ON mt.topic_queue_id = tq.id 
-                    WHERE tq.name = %s
+                    WHERE tq.id = %s AND NOT mt.status
                 """
-        params = (topic_queue_name,)
+        params = (topic_queue_id,)
         conn.execute(query, params)
         result = conn.fetchall()
         return result

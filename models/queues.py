@@ -1,7 +1,7 @@
 import mysql.connector
 from models.connection import get_connection, get_cursor
 
-class Queue:
+class QueueModel:
     def __init__(self, name, user_id, id=None):
         self.id = id
         self.name = name
@@ -13,7 +13,7 @@ class Queue:
         conn = get_cursor()
         conn.execute("SELECT * FROM queues WHERE name = %s", (name,))
         result = conn.fetchone()
-        return Queue(result[1], result[2], result[0])
+        return QueueModel(result[1], result[2], result[0])
 
     @staticmethod
     def get_all_queues_from_user(user_id):
@@ -66,6 +66,7 @@ class Queue:
             val = (self.name, self.user_id, self.name)
             cursor.execute(sql, val)
             get_connection().commit()
+            self.id = cursor.lastrowid
         except Exception as e:
             print(f"Error while saving user: {e}")
         

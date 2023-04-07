@@ -1,8 +1,14 @@
 from flask import Flask, render_template, request, redirect
 from controllers import topic_controller
 from controllers import queue_controller
+from controllers import user_controller
 
 def register(app):
+    #user
+    @app.route('/create_user', methods=["GET"])
+    def create_user():
+        return user_controller.create_user()
+
     #Topics
     @app.route('/create_topic', methods=["POST"])
     def create_topic():

@@ -82,12 +82,13 @@ class Topic(config_pb2_grpc.TopicServiceServicer):
     def ConsumeTopic(self, request, context):
         if (check_key(request.key) and request.topic_name in list(topics.keys())):
             if(is_subscriber(request.key, request.topic_name)):
-                message = topics[request.topic_name]['queues'][request.key].pop(0)
-                message_topic_id = topics[request.topic_name]['message_ids'][request.key].pop(0)
-                message_topic = MessageTopicModel.get_by_id(message_topic_id)
-                message_topic.update_status()
-                print(topics)
-                return config_pb2.TopicResponseMessage(code=200, message=message)
+                if len(topics[request.topic_name]['queues'][request.key]) > 0:
+                    message = topics[request.topic_name]['queues'][request.key].pop(0)
+                    message_topic_id = topics[request.topic_name]['message_ids'][request.key].pop(0)
+                    message_topic = MessageTopicModel.get_by_id(message_topic_id)
+                    message_topic.update_status()
+                    print(topics)
+                    return config_pb2.TopicResponseMessage(code=200, message=message)
             return config_pb2.TopicResponseMessage(code=400, message='')
         return config_pb2.TopicResponseMessage(code=500, message='')
     

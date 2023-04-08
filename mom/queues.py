@@ -77,12 +77,13 @@ class Queue(config_pb2_grpc.QueueServiceServicer):
     def ConsumeQueue(self, request, context):
         if (check_key(request.key) and request.queue_name in list(queues.keys())):
             if(is_subscriber(request.key, request.queue_name)):
-                message = queues[request.queue_name]['queue'].pop(0)
-                message_queue_id = queues[request.queue_name]['message_ids'].pop(0)
-                message_queue = MessageQueueModel.get_by_id(message_queue_id)
-                message_queue.update_status()
-                print(queues)
-                return config_pb2.QueueResponseMessage(code=200, message=message)
+                if(len(queues[request.queue_name]['queue']) > 0):
+                    message = queues[request.queue_name]['queue'].pop(0)
+                    message_queue_id = queues[request.queue_name]['message_ids'].pop(0)
+                    message_queue = MessageQueueModel.get_by_id(message_queue_id)
+                    message_queue.update_status()
+                    print(queues)
+                    return config_pb2.QueueResponseMessage(code=200, message=message)
             return config_pb2.QueueResponseMessage(code=400, message='')
         return config_pb2.QueueResponseMessage(code=500, message='')
     

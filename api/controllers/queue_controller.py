@@ -25,7 +25,7 @@ def list_queues(request):
     if 'key' in request.headers:
         response = list(request.headers["key"])
         if response.code == 200:
-            return "Your queues are {}".format(response.queues)
+            return "{}".format(response.queues)
         return "Request returned error code {}".format(response.code)
     else:
         return "Make sure you added your key"
@@ -55,7 +55,7 @@ def consume_queue(request):
     if 'key' in request.headers and 'queue_name' in request.form:
         response = consume(request.headers["key"],request.form['queue_name'])
         if response.code == 200:
-            return "consumed from queue, message: {}".format(response.message)
+            return (response.message)
         return "Request returned error code {}".format(response.code)
     else:
         return "Make sure you added your key and the queue_name"

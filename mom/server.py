@@ -5,9 +5,10 @@ import config_pb2_grpc
 from topics import Topic
 from queues import Queue
 from users import User
+import config_mom
 
 def serve():
-    port = '50051'
+    port = config_mom.PORT
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     config_pb2_grpc.add_TopicServiceServicer_to_server(Topic(), server)
     config_pb2_grpc.add_QueueServiceServicer_to_server(Queue(), server)

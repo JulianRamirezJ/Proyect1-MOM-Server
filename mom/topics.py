@@ -16,7 +16,7 @@ class Topic(config_pb2_grpc.TopicServiceServicer):
 
     def Create(self, request, context):
         if (check_key(request.key) and request.topic_name not in list(topics.keys())):
-            topics[request.topic_name] = {'creator': request.key, 'queues': {request.key: []}}
+            topics[request.topic_name] = {'creator': request.key, 'queues': {request.key: []}, 'message_ids': {request.key: []}}
             print(topics)
             topic = TopicModel(request.topic_name,request.key)
             topic.save()
@@ -30,9 +30,9 @@ class Topic(config_pb2_grpc.TopicServiceServicer):
         if (check_key(request.key) and request.topic_name in list(topics.keys())):
             if(is_creator(request.key, request.topic_name)):
                 del topics[request.topic_name]
-                print(topics)
                 topic = TopicModel(request.topic_name,request.key)
                 topic.delete()
+                print(topics)
                 return config_pb2.TopicResponse(code=200)
         return config_pb2.TopicResponse(code=500)
     
@@ -52,10 +52,11 @@ class Topic(config_pb2_grpc.TopicServiceServicer):
         if (check_key(request.key) and request.topic_name in list(topics.keys())):
             if(not is_subscriber(request.key, request.topic_name)):
                 topics[request.topic_name]['queues'][request.key] = []
-                print(topics)
                 topic = TopicModel.get_by_name(request.topic_name)
                 topic_queue = TopicsQueueModel(topic.id,request.key)
                 topic_queue.save()
+                topics[request.topic_name]['message_ids'][request.key] = []
+                print(topics)
                 return config_pb2.TopicResponse(code=200)
             return config_pb2.TopicResponse(code=400)
         return config_pb2.TopicResponse(code=500)

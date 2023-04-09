@@ -36,7 +36,6 @@ En resumen, nuestro Message-Oriented Middleware es una solución escalable y con
  ### Vista general de la arquitectura del proyecto
  
  ![Architecture](https://user-images.githubusercontent.com/57159295/230795312-ea09ba6e-e1b3-461d-adcd-15b3b16eeb50.png)
- ![image](https://user-images.githubusercontent.com/57159295/229848596-c81a54cf-1a01-4b34-b841-fcad9deeb019.png)
  
  Como se puede ver en la imagen, la arquitectura del proyecto se compone de 3 partes especialmente. Que son un cliente, una API, y el
  propio core del MOM que incluye la base de datos. El cliente y la API actuan como intermediaros proporcionando una capa de abstracción y
@@ -46,7 +45,7 @@ En resumen, nuestro Message-Oriented Middleware es una solución escalable y con
  En cuanto al propio core del MOM este se desarrolló teniendo en cuenta que los mensajes y demás información se manejarian inicialemente en 
  memoria pero también garantizando que estos persistan y que se puedan restuarar  en caso de un fallo en el servidor.
  
- A continuación se presentan un para de diagramas que sirven para ilustrar la arquitectura interna del MOM.
+ A continuación se presentan un par de diagramas que sirven para ilustrar la arquitectura interna del MOM.
  
  ##### Modelo de base de datos
 
@@ -90,7 +89,7 @@ En resumen, nuestro Message-Oriented Middleware es una solución escalable y con
                     
  #### Configuración
  
-    Como primer paso en la configuaración del entorno está correr las migraciones, para esto se debe configurar el archivo config.py
+  Como primer paso en la configuaración del entorno está correr las migraciones, para esto se debe configurar el archivo config.py
     según los requerimientos, inicialmente la base de datos está configurada para trabajar en local para el MOM, pero si es de su preferencia
     también podría estar en otro servidor. Para correr las migraciones debe estar instalado previamente mysql y estar activado,
     luego posicionese en la carpeta /migrations debe dar permisos a un archivo bash y ejecutarlo:
@@ -98,16 +97,16 @@ En resumen, nuestro Message-Oriented Middleware es una solución escalable y con
                     cmod a+x run-migrations.sh
                     ./run-migrations.sh
                     
-    Luego de que tenga las migraciones listas puede proceder a lanzar el MOM server, para esto posicionese en la carapeta /mom
+  Luego de que tenga las migraciones listas puede proceder a lanzar el MOM server, para esto posicionese en la carapeta /mom
     y ejecute:
     
                   python3 server.py
              
-    A continuación puede proceder a levantar la API, para esto pocisionse en la carpeta api y ejecute:
+   A continuación puede proceder a levantar la API, para esto pocisionse en la carpeta api y ejecute:
     
                   python3 api.py
                   
-     En este punto ya tenemos el MOM funcionado por completo y el resto de cosas ya estarian más relacionadas con los clientes
+   En este punto ya tenemos el MOM funcionado por completo y el resto de cosas ya estarian más relacionadas con los clientes
      o usuarios finales del proyecto. Esto se explicará más a detalle en la descripción del ambiente de ejecución
      
 

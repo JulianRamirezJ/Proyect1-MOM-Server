@@ -1,6 +1,8 @@
 # Info de la materia: ST0263 Tópicos especiales en Telemática
 #
-# Estudiante: Julian Andres Ramirez Jimenez, jaramirezj@eafit.edu.co
+# Estudiantes: Julian Andres Ramirez Jimenez, jaramirezj@eafit.edu.co
+               Samuel David Villegas Bedoya, sdvillegab@eafit.edu.co
+               Julian Giraldo Perez, jgiraldop@eafit.edu.co
 #
 # Profesor: Edwin Nelson Montoya Munera, emontoya@eafit.edu.co
 #
@@ -8,7 +10,8 @@
 # API GATEWAY y microservicios a través de MOM Y gRPC.
 #
 
-## 1. 
+# 1. Descripción del proyecto
+
 En esta actividad se desarrollaron dos microservicios basicos, que corresponden a listar y
 buscar un tipo de archivo especifico. Estos microservicios se implementaron dos veces, ya que se tiene un API Gateway
 que actua como balnceador de carga entre los dos servidores que proveen estos microservicios. Aqui hay un punto muy importante

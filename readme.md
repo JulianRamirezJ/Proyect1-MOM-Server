@@ -13,7 +13,7 @@
 
 # 1. Descripción del proyecto
 
-En este proyecto se llevó a cabo el desarrollo de un Message-Oriented Middleware, que corresponde a un middleware para el intercambio de mensajes de manera asíncrona entre un conjunto de clientes o servidores para asi establecer comunicación entre ellos. Para lograr esto, utilizamos el lenguaje de programación Python y nos enfocamos en la replicación de los datos para garantizar que ante cualquier fallo del servidor podamos garantizar la restauración de los datos, lo que hace a nuestro sistema tolerante a fallos. De esta manera, los mensajes intercambiados por los clientes se almacenan primero en memoria para poder realizar un rapido intercambio cuando alguno de los clientes solicite  y posteriormente se alamacenan en una base de datos y se pueden recuperar en caso de que el servidor falle.
+En este proyecto se llevó a cabo el desarrollo de un Message-Oriented Middleware, que corresponde a un middleware para el intercambio de mensajes de manera asíncrona entre un conjunto de clientes o servidores. Para lograr esto, utilizamos el lenguaje de programación Python y nos enfocamos en la replicación de los datos para garantizar que ante cualquier fallo del servidor podamos garantizar la restauración de los datolisas, lo que hace a nuestro sistema tolerante a fallos. De esta manera, los mensajes intercambiados por los clientes se almacenan primero en memoria para poder realizar un rapido intercambio cuando alguno de los clientes los solicite  y posteriormente se almacenan en una base de datos y se pueden recuperar en caso de que el servidor falle.
 
 Además, creamos un cliente que le permite a los usuarios del MOM utilizar las funcionalidades con un buen nivel de abstracción. Este cliente
 hace peticiones a una API que desarrollamos, la cual se comunica con el Message-Oriented Middleware a través de comunicación por gRPC. 
@@ -21,13 +21,10 @@ Esto permite una comunicación rápida y eficiente entre el cliente, la API, y e
 En resumen, nuestro Message-Oriented Middleware es una solución escalable y confiable para la comunicación entre nodos distribuidos en una red, que puede ser utilizado para diversas aplicaciones y plataformas.
 
 
-
 ## 1.1. Que aspectos cumplió o desarrolló de la actividad propuesta por el profesor (requerimientos funcionales y no funcionales)
- Los aspectos propuestos por el profesor era hacer el API, además de implementar los dos servicios con MOM y gRPC, en este caso
- cumplí todos los requerimientos funcionales.
- Por el lado de los no funcionales se cumplió el hecho de desplegar el proyecto en una máquina EC2 de amazon, además de hacer uso
- de RabbitMQ. 
-  Otro requerimiento cumplido es que todos los servicios se levantan al iniciar la instancia.
+ Los aspectos propuestos por el profesor inicialmente eran construir el MOM teniendo en cuenta ciertos criterios como enfocarse en replicación 
+ o particionamiento, tener muy en cuenta la tolerancia a fallos y algunas funcionalidades especificas relacionadas con los tópicos y las colas en el MOM
+ como lo son crear, listar, eliminar, suscribirse, publicar mensajes y consumir mensajes.
  
 # 2. Información general de diseño de alto nivel y arquitectura
 

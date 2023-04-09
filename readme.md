@@ -22,224 +22,213 @@ En resumen, nuestro Message-Oriented Middleware es una solución escalable y con
 
 
 ## 1.1. Que aspectos cumplió o desarrolló de la actividad propuesta por el profesor (requerimientos funcionales y no funcionales)
+
  Los aspectos propuestos por el profesor inicialmente eran construir el MOM teniendo en cuenta ciertos criterios como enfocarse en replicación 
  o particionamiento, tener muy en cuenta la tolerancia a fallos y algunas funcionalidades especificas relacionadas con los tópicos y las colas en el MOM
- como lo son crear, listar, eliminar, suscribirse, publicar mensajes y consumir mensajes.
+ como lo son crear, listar, eliminar, suscribirse, publicar mensajes y consumir mensajes. Además otro requisito era desplegar el proyecto
+ en AWS con algo similar a lo hecho en el reto 2.
  
-# 2. Información general de diseño de alto nivel y arquitectura
+ En nuestro caso cumplimos con todos los items requeridos por el profesor enfocando nuestra solución especialmente en la tolerancia a fallos
+ y la replicación. Implementando una solución final con lo hecho en el reto 2.
+ 
+## 2. Información general de diseño de alto nivel y arquitectura
 
-   
- ## First architecture approach
-
+ ### Vista general de la arquitectura del proyecto
+ 
+ ![Architecture](https://user-images.githubusercontent.com/57159295/230795312-ea09ba6e-e1b3-461d-adcd-15b3b16eeb50.png)
  ![image](https://user-images.githubusercontent.com/57159295/229848596-c81a54cf-1a01-4b34-b841-fcad9deeb019.png)
-
- ## DB Model
+ 
+ Como se puede ver en la imagen, la arquitectura del proyecto se compone de 3 partes especialmente. Que son un cliente, una API, y el
+ propio core del MOM que incluye la base de datos. El cliente y la API actuan como intermediaros proporcionando una capa de abstracción y
+ haciendo nuestra solución más escalable a futuro. EN cuanto a la API esta se desarrolló siguiendo un modelo MVC.
+ En nuestro proyecto el cliente y la API se a comunicacan por REST y entre la API y el MOM se establece la comunicación por gRPC.
+ 
+ En cuanto al propio core del MOM este se desarrolló teniendo en cuenta que los mensajes y demás información se manejarian inicialemente en 
+ memoria pero también garantizando que estos persistan y que se puedan restuarar  en caso de un fallo en el servidor.
+ 
+ A continuación se presentan un para de diagramas que sirven para ilustrar la arquitectura interna del MOM.
+ 
+ ##### Modelo de base de datos
 
  ![Proyecto1_db](https://user-images.githubusercontent.com/57159295/229974138-fe289a0f-78e0-46d3-8e83-cc8229abf4a2.png)
 
- ## Class Diagram
+ ##### Diagrama de clases
 
  file:///home/julianramirezj/Downloads/Untitled%20Diagram.drawio.png![image](https://user-images.githubusercontent.com/57159295/230107761-0fb433cf-9666-4e9d-bae9-33018cd7fa79.png)
 
    
-   Como se puede ver en la imagen la arquitectura del proyecto consta de un cliente como puede ser POSTMAN, que se comunica con una petción 
-   GET con el API GATEWAY. Este API GATEWAY a su vez se comunica con dos microservicios: microservice1 y microservice2. Para comunicarse con 
-   el microservicio 1 se hace a través del MOM RabbitMQ haciendo uso de colas. Para comunicarse con el microservicio 2 se hace a través de gRPC.
-   Otro importante aspecto a tener en cuenta en la arquitectura, es que el despliegue de el API REST y los microservicios se hizo en una instancia
-   de EC2 de amazon(Todos en la misma maquina).
 
 # 3. Descripción del ambiente de desarrollo y técnico
 
-   - Para desarrollar el proyecto se utilizó principamennte el lenguaje de programación python en su versión 3.10.6. En este lenguaje se programó tanto la API REST
-     como la comunicación con los microservicios y los mismos microservicios.
-   - Para desarrollar el API se utilizó el micro Framework Flask como servidor.
-   - En cuanto al MOM se hizo uso de RabbitMQ. Para conectarnos y hacer uso de las utilidades que proveee Rabbit debemos importar la libreria 'pika'.
-   - Se hace uso de docker para montar sobre este el servidor de RabbitMQ.
+   - Para desarrollar el proyecto se utilizó principamennte el lenguaje de programación python en su versión 3.10.6. En este lenguaje se programó tanto el cliente          como la API y el mismo MOM.
+   - También se uso C++ en los archivo .proto para definir la estructura de la comunicación en gRPC.
+   - Para desarrollar el API se utilizó el micro Framework Flask como servidor, implementando en este los endpoints de la API.
+   - En cuanto a base de datos se utilizó MySQL.
    - Para lograr hacer la comunicación con gRPC se utilizó la libreria 'grpcio',en su  versión 1.37.1 con la utilidad 'grpcio-tools'. 
-   - Para el correcto funcionamiento de grpc se utilizó la libreria 'futures'.
+   - Para el correcto funcionamiento de grpc en cuanto a la concuerrencia se utilizó la libreria 'futures'.
+   - Para la conexión con la base de datos se utilizó la libreria mysql-connector de python.
    - Se hace uso de la libreria 'os' para obtener la lista de archivos del directorio seleccionado.
    - Se hizo uso de la libreria 'json' para poner los mensajes que retornan los microservicios en formato json.
    - Se utilizó la libreria 'sys' para manejar las importaciones en ciertos directorios.
-   - También se uso C++ en un archivo .proto para definir la estructura de la comunicación en gRPC.
+
 
 ## Como se compila y ejecuta.
 
-Para compilar y ejecutar el proyecto se siguieron los pasos listados a continuación:
- Las dependencias necesarias para que el proyecto funcione que deben ser instaladas son:
-  1. Instalar python 3 (sudo apt install python3 )
-  2. Instalar docker:
-     sudo apt install docker.io -y
-     sudo apt install docker-compose -y
-     sudo apt install git -y
-     sudo systemctl enable docker
-     sudo systemctl start docker
-     sudo usermod -a -G docker ubuntu
-  3. Instalar la libreria de python pika. ( pip3 install pika ) 
-  4. Instalar la libreria de python json. ( pip3 install json ) 
-  5. Instalar la libreria de python os. ( pip3 install os ) 
-  6. Instalar la libreria grpcio con la utilidad grpcio-tools ( pip3 install grpcio grpcio-tools )
+#### Instalación
+ Antes de ejecutar el proyecto hay que tener en cuenta que se deben instalar las siguientes cosas:
+                  
+           MySQL DB:
+                     sudo apt-get update
+                     sudo apt-get install mysql-server
+                     sudo systemctl start mysql
+           Python:
+                     sudo apt install python3
+                     sudo apt install python3-pip
+                     pip install mysql-connector-python
+                     pip install grpcio
+                     pip install flask
+                    
+ #### Configuración
  
-Para ejecutarlo por primera vez se siguen los pasos a continuación(En un entorno de desarrollo):
-
-   1.Estar posicionado en el directorio del proyecto que es 'st0263-jaramirezj/reto2'.
-   
-   1.Asegurarse de que todas las reglas de entrada esten configuradas correctamente. Esto se especifica en la sección Detalles Técnicos.
-   
-   2. En el directorio del proyecto ejecute este comando para montar el servidor de RabbitMQ:
-   docker run -d --hostname my-rabbit -p 15672:15672 -p 5672:5672 --name rabbit-server -e RABBITMQ_DEFAULT_USER=user -e RABBITMQ_DEFAULT_PASS=password rabbitmq:3-   management 
-   
-   3. Ingresar a la dirección http://IP:15672, esto lo llevará al panel de administración de rabbitmq, ingree con user = user y password=password. Luego
-      ingrese a la subpagina exchange y cree un nuevo exchange con el nombre 'file_listing'. Luego vaya a la subpagina Queues y cree dos colas de
-      tipo 'Classic' con los nombres 'request_files' y 'receive_files'. A continuación regrese a la subpágina de exchange e ingrese a el exchange 'file_listing'
-      que creamos anteriormente, dirijase a la parte inferior y donde dice bind hay que asociar las dos colas que creamos a este exchange. Para esto debe
-      escribir el nombre de la cola y la routing key. Para 'request_files' routing_key='request' y para 'receive_files' routing_key='receive'
-   
-   4. En caso de que aún no se haya compilado el archivo service.proto(Ya estan incluidos los archivos compilados en el repositorio), se debe 
-    ejecutar el siguiente: python3 -m grpc_tools.protoc -I ./grpc_client --python_out=. \ --grpc_python_out=. ./service.proto
-   
-   5. Ejecutar el comando: docker start rabbit-server
-  
-   6. Luego se abre 3 terminales en ingrese a la carpeta del proyecto,posteriormente ejecute lo siguiente:
+    Como primer paso en la configuaración del entorno está correr las migraciones, para esto se debe configurar el archivo config.py
+    según los requerimientos, inicialmente la base de datos está configurada para trabajar en local para el MOM, pero si es de su preferencia
+    también podría estar en otro servidor. Para correr las migraciones debe estar instalado previamente mysql y estar activado,
+    luego posicionese en la carpeta /migrations debe dar permisos a un archivo bash y ejecutarlo:
+    
+                    cmod a+x run-migrations.sh
+                    ./run-migrations.sh
+                    
+    Luego de que tenga las migraciones listas puede proceder a lanzar el MOM server, para esto posicionese en la carapeta /mom
+    y ejecute:
+    
+                  python3 server.py
+             
+    A continuación puede proceder a levantar la API, para esto pocisionse en la carpeta api y ejecute:
+    
+                  python3 api.py
+                  
+     En este punto ya tenemos el MOM funcionado por completo y el resto de cosas ya estarian más relacionadas con los clientes
+     o usuarios finales del proyecto. Esto se explicará más a detalle en la descripción del ambiente de ejecución
      
-     6.1. En la primera terminal ingrese a la ruta /microservice1 y ejecute 'python3 ms1_mom.py'. Con esto ya tenemos funcionando 
-      el microservicio 1.
-      
-      6.2. En la segunda terminal ingrese a la ruta /grpc_client y ejecute 'python3 ms2_grpc.py'. Con esto ya tenemos funcionando 
-      el microservicio 2.
-      
-      6.3. En la tercera terminal ejecute 'python3 server.py' para que se ejecute la API.
-     
- En este punto ya se tendria todo listo, y se podria empezar a hacer peticiones a la API.
- 
- En la sección de como se lanzan los servidores en el ambiente de ejecución, se ilustra una forma mejor y más rapida de poner
- todo a funcionar luego de que ya se han hecho las configuraciones iniciales
 
 
 ## Detalles del desarrollo
 
-Durante el desarrollo se me presentaron varios problemas que tarde mucho en resolver, con lo que el proyecto tomó más tiempo de desarrollo de
-lo esperado. Inicialmente empecé programando el MOM para lo que utilicé el tutorial de RabbitMQ como punto de partida, la primera vez que lo
-intenté hacer no funcionó, pero después de cierto tiempo pude descubrir que el error era que estaba usando la misma routing key para las dos colas. 
-Posterior a esto pude settear correctamente mi máquina virtual en amazon y ejecutar la comunicación por RabbitMQ. Luego pasé a hacer
-que el microservicio devolviera una respuesta, no sin antes tener varios problemas en los que se destaca que no se devolvia un mensaje o se devolvia 
-el mismo mensaje que se enviaba. Al final logré hacer que el microservicio devolviera un json con los archivos listados, con lo que tenia la primera
-parte del proyecto finalizada. 
-Posteriormente puse manos a la obra en hacer el API Gateway, este aparentemente fue fácil de hacer, con la excepción de que al principio no lo estaba
-configurando bien para que escuchara peticiones de IPs externas, y ademas no habia configurado una regla de entrada para la instancia EC2 para que 
-escuchara de IPs externas por este puerto. 
-Luego procedí a desarrollar el microservicio y la comunicación con gRPC, esto fue lo que menos tiempo me tomó a pesar de que de nuevo me enfrenté a multiples 
-errores y problemas con instalaciones, inclusiones, nombres y otras cosas.
-Luego hice unos scripts de shell para que se instalaran las dependencias necesarias y se setteara el ptoyecto completo sin necesidad de tener que 
-entrar a la consola. Y por ultimo programe un servicio del sistema para que se lanzen todos los servidores al iniciar
+El desarrollo se hizo de una manera ágil, en donde cada dia en una reunión se asignaban ciertas tareas a realizar por los integrantes
+del grupo y estos las desarrollaban duurante el dia. Esta froma de trabajo agilizó, mejoró la comunicación y nos permitió avanzar muy rapido 
+en el proyecto logrando hacer un producto funcional en alrededor de 1 semana. Cada integrante se especializó en una capa del proyecto, por ejemplo
+Julian Ramirez estuvo especialmente enfocado en la base de datos y el cliente, Julian Giraldo en la API y el manejo de los datos en memoria del MOM y
+Samuel Villegas en la integración de todos los componentes y la comunicación entre ellos.
+A pesar de esta especialización, todos los integrantes participaron activamente en el desarrollo de cada una de las capas y contribuyeron al excelente resultado 
+que se obtuvo al final con el proyecto.
 
 
 ## Detalles técnicos
 
-Hay que configurar las reglas de entrada para la instancia EC2, para que la comunicación por los puertos se de sin problemas. 
-A continuación se muestra como están configuradas las reglas de entrada:
-    ![image](https://user-images.githubusercontent.com/57159295/222557811-ee45f35e-d8f1-4345-bd2a-19b99e8881b7.png)
-Nota: Tenga en cuenta que si modifica los puertos en los archovos de configuración, deberá por ende modificar las
-reglas de entrada.
+
 
 ## Descripción y como se configura los parámetros del proyecto
 
 Para configurar los parametros con los que se va a ejecutar el proyecto se tiene un archivo de configuración por cada nodo en el proyecto que
-recibe o envia datos. Por ejemplo para la api se tiene un archivo llamado api_config.py en donde se ponen parametros básicos como puerto y host.
-De la misma forma cada microservicio tiene su archivo de configuración, al igual que los clientes que solicitan recursos a los microservicios.
-.
-Configuración de un microservicio:
-   ![image](https://user-images.githubusercontent.com/57159295/222545629-f78550dd-8861-4cc5-a883-1c60cc58753c.png)
+recibe o envia datos. Por ejemplo en la api se tiene una carpeta /config se tienen varios archivos, entre ellos está connection_grpc.py donde se  puso la
+configuración del host y el puerto para comunicarse con grpc en el MOM. De igual forma en el mom se tiene un archivo de configuración llamado 
+config_mom.py donde se define el puerto para la comunación grpc. De igual forma tanto para las migraciones como para los modelos que a traves de una
+abstracción permiten la comunicación con la base de datos se establecen archivos de configuración que establecen los parametros de conexión a la
+base de datos.
+Además de todo lo anteriormente mencionado lo que mejor permite establecer los parametros de conexión es el cliente, ya que es el mismo
+usuario que está invocado las funcionalidades de nuestro MOM que dice donde está el host y el port de la API. De la siguiente manera:
+                  
+                    conn = ChasquiConnector('localhost','5000')
 
 
 ## ESTRUCTURA DE DIRECTORIOS Y ARCHIVOS IMPORTANTE DEL PROYECTO
 ## 
-Los archivos más importantes del proyecto son 'server.py' que contiene la API, los archivos mom/mom.py y grpc_client/grpc_c.py que 
-permiten establecer comunicación con los microservicios(Clientes). Y los archivos microservice1/ms1_mom.py y grpc_client/ms2_grpc.py que son
-los que contienen el codigo de los microservicios.
-![image](https://user-images.githubusercontent.com/57159295/222546363-0aaf4c82-1c02-4905-8192-aeed1cf697fd.png)
 
+![image](https://user-images.githubusercontent.com/57159295/230796759-e3206c26-5b2e-41fb-9a1b-c5ff9e33f00a.png)
+![image](https://user-images.githubusercontent.com/57159295/230796786-43afa71e-a048-4d25-9e7a-6a349c52364e.png)
+![image](https://user-images.githubusercontent.com/57159295/230796803-b8cd0dd1-9739-4b70-a54a-4f2e71e4f1c3.png)
 
-## Resultados o pantallazos (En desarollo)
+En las imagenes anteriores se puede ver como está organizado el codigo del proyecto. Como carpetas principales tenemos api, client y mom. 
+Para el MOM son importantes las funcionalidades que proveen los directorios migrations y models, ya que estos le permiten realizar todo lo relacionado
+con la base de datos. Además como archivo principal en esta capa tenemos server.py  que es el que permite lanzar el MOM e inicializar las funcionalidades que
+este tiene.
+En cuanto a la API, podemos ver claramente que la estructura de directorios obedece a un Model-View Controller, donde las rutas contienen los endpoints. Para
+lanzar la API se usa el archivo api.py.
+En cuanto al cliente este consta simplemente de un archivo y simplemente basta con que un usuario final ponga este archivo en el directorio donde hará uso
+de nuestro MOM.
 
-A continuación se muestran los servicios funcionando:
-
-Servidor(API) funcionando:
-![image](https://user-images.githubusercontent.com/57159295/222574650-3b0ded24-4c08-4b40-932e-296d21f33815.png)
-
-Microservicio 1 Funcionando:
-![image](https://user-images.githubusercontent.com/57159295/222574724-cac070b8-83f8-45d8-bd26-8b1bcdcdfd53.png)
-
-Microservicio 2 Funcionando:
-![image](https://user-images.githubusercontent.com/57159295/222574798-63e149d9-f4ae-48a2-ad99-ea3aaa9d896d.png)
+## Resultados o pantallazos (En desarrollo)
 
 
 # 4. Descripción del ambiente de EJECUCIÓN (en producción)
 
 # IP o nombres de dominio en nube o en la máquina servidor.
 
-Para que se puedan hacer peticiones al la API sin necesidad de volver a consultar la IP de la instancia EC2, 
-la IP de la máquina se fijó a través de una IP elastica, esta es: 44.213.230.177, además se debe tener en cuenta que
-para conectarse a la api se tiene que usar el puerto '5000' e interiormente la api está configurada para funcionar sobre la
-dirección '/api?list', donde list puede enviarse sin parametros o con un parametro del tipo '.txt' o '.py'.
-Una dirección completa para conectarse a la api sería '44.213.230.177:5000/api?list=.txt'
 
 ## Como se lanza el servidor.
-
-Para lanzar el servidor y los microservicios luego de que todo se haya configurado todo, dirijase al
-directorio del proyecto y ejecute el comando './start_servers.sh'. Este archivo pondrá a funcionar el proyecto.
-En este script se encuentra el siguiente código:
-
-    docker start rabbit-server
-    python3 microservice1/ms1_mom.py &
-    sleep 0.2
-    python3 grpc_client/ms2_grpc.py &
-    sleep 0.2
-    python3 server.py &
     
-Para evitar tener que hacer estos pasos de manera manual, se tiene una forma alternativa que lo que hace es 
-ejecutar el script anterior cuando se inicia la instancia. Esto se logra a partir
-de crear un archivo .service en la carpeta /etc/systemd/system , que contiene el siguiente código:
-
-    [Unit]
-    Description=Start servers
-    [Service]
-    Type=simple
-    ExecStart=/home/ubuntu/st0263-jaramirezj/reto2/start_servers.sh
-    [Install]
-    WantedBy=multi-user.target
-
-
-
+   
 ## Guia de como un usuario utilizaría el software o la aplicación
 
-Un usuario podría utilizar la aplicación mediante POSTMAN o similares, o desde una terminal.
-Para POSTMAN simplemente seria configurar el tipo de petición cómo GET y poner la dirección del proyecto, 
-en este caso http://IP:5000/api?list , también podria ser http://IP:5000/api?list=.txt o http://IP:5000/api?list=.py
-Desde la terminal podriamos ejecutar el comando curl así: curl -X GET  http://IP:5000/api?list=.txt
+Para un usuario final el uso de la aplicación se haria mediante Python, ya que en este lenguaje desarrollamos el cliente,
+aún así se podria hacer uso desde cualquier otro lenguaje de programación, solo que de momento no se tendria una libreria que
+implemente la abstracción que tenemos en python con lo que seria más complejo darle uso.
+
+A continuación se presenta un codigo de ejemplo que sirve como guia para un usuario final.
+( Hay que tener en cuenta que el archivo chasqui.py debe estar en el directorio )
+        
+        ```python
+          from chasqui import ChasquiConnector     #Para importar teniendo el archivo chasqui.py en el mismo directorio
+          
+          def main():
+             # Se crea la conexión, los parametros corresponden a donde esta corriendo la API
+             conn = ChasquiConnector('localhost','5000') # Conectarse de esta forma crea un nuevo usuario
+             conn = ChasquiConnector('localhost','5000', ''4jqa06l7yf') # De esta forma nos conectamos con un usuario existente
+             
+             # Para crear un uevo topico o cola pasamos el nombre 
+             conn.create_topic('topico1')  # Pasamos como parametro el nombre
+             conn.create_queue('queue1')
+             
+             # Para listar topicos o colas
+             conn.list_topics()
+             conn.list_queues()
+             
+             # Para eliminar topicos y colas
+             conn.delete_topic('topico1')
+             conn.delete_queue('queue1')
+             
+             # Para suscribirse a un topico o cola (Creado por otro usuario)
+             conn.suscribe_topic('topico_prueba') # Pasamos como parametro el nombre
+             conn.suscribe_queue('queue_test')
+             
+             # Para publicar mensajes en un topico o cola (Parametros: Nombre del topico, Mensaje)
+             conn.publish_message_topic('topico1','Hola, este es un mensaje') 
+             conn.publish_message_queue('queue1','Hola, este es un mensaje') 
+             
+             # Para consumir mensajes de un topico o cola (Parametros: Nombre del topico, Reintento activado)
+             # Si el reintento activado es True, se espera hasta que haya un mensaje en la cola o el topico, y cuando se encuentre se 
+             retorna. De lo contrario se pregunta si hay mensajes, si hay se obtienen y si no se deja de consumir.
+             # Solo se consume un mensaje al tiempo.
+             conn.consume_message_topic('topico_prueba') 
+             conn.consume_message_topic('topico_prueba', True) 
+             conn.consume_message_queue('queue_test') 
+             conn.consume_message_queue('queue_test', True) 
+             
+        ```
+
 
 ## Resultados o pantallazos (En producción)
-
-Ejecución de solicitud GET desde la misma máquina:
-![image](https://user-images.githubusercontent.com/57159295/222576023-46c1df0a-e0dc-4e7d-8c8e-b2ad1b5563a7.png)
-
-Ejecución desde POSTMAN y un IP externa:
-Petición simple
-![image](https://user-images.githubusercontent.com/57159295/222915689-61cda0d6-b7a2-410c-b857-934cc5d8e860.png)
-
-Petición para buscar un tipo de archivo especifico(.txt)
-![image](https://user-images.githubusercontent.com/57159295/222916140-cb488173-ec07-4d41-9798-73d7309c2c58.png)
-
-Petición para buscar un tipo de archivo especifico(.py)
-![image](https://user-images.githubusercontent.com/57159295/222973420-0ee03303-92dd-48aa-b8d9-af5391f9a82f.png)
-
+        
+        
 
 # referencias:
-## Codigo de Edwin Montoya - Profesor
-       https://github.com/st0263eafit/st0263-231/tree/main/rabbitmq-python
+
+## Código del profesor - Edwin Montoya
+      https://github.com/st0263eafit/st0263-231/tree/main/Laboratorio-RPC
 ## Quickstart - Oficial Flask documentation
       https://flask.palletsprojects.com/en/2.2.x/quickstart/#a-minimal-application
-## Oficial RabbitMQ documentation
-      https://www.rabbitmq.com/getstarted.html
+## Quickstart - Oficial grpc documentation
+      https://grpc.io/docs/languages/python/quickstart/
 
 #### versión README.md -> 1.0 (2023-Marzo)
 

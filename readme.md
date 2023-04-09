@@ -26,7 +26,19 @@ servicio respectivo, le solicite los recursos, y este los reciba, con lo que el 
  
 # 2. Información general de diseño de alto nivel y arquitectura
 
-   ![API_MOM_GRPCpng](https://user-images.githubusercontent.com/57159295/222502769-ced250b8-9c67-42cc-a1a1-7a0830886cd3.png)
+   
+ ## First architecture approach
+
+ ![image](https://user-images.githubusercontent.com/57159295/229848596-c81a54cf-1a01-4b34-b841-fcad9deeb019.png)
+
+ ## DB Model
+
+ ![Proyecto1_db](https://user-images.githubusercontent.com/57159295/229974138-fe289a0f-78e0-46d3-8e83-cc8229abf4a2.png)
+
+ ## Class Diagram
+
+ file:///home/julianramirezj/Downloads/Untitled%20Diagram.drawio.png![image](https://user-images.githubusercontent.com/57159295/230107761-0fb433cf-9666-4e9d-bae9-33018cd7fa79.png)
+
    
    Como se puede ver en la imagen la arquitectura del proyecto consta de un cliente como puede ser POSTMAN, que se comunica con una petción 
    GET con el API GATEWAY. Este API GATEWAY a su vez se comunica con dos microservicios: microservice1 y microservice2. Para comunicarse con 
@@ -229,17 +241,5 @@ Petición para buscar un tipo de archivo especifico(.py)
 
 #### versión README.md -> 1.0 (2023-Marzo)
 
-
-# First architecture approach
-
-![image](https://user-images.githubusercontent.com/57159295/229848596-c81a54cf-1a01-4b34-b841-fcad9deeb019.png)
-
-## DB Model
-
-![Proyecto1_db](https://user-images.githubusercontent.com/57159295/229974138-fe289a0f-78e0-46d3-8e83-cc8229abf4a2.png)
-
-## Class Diagram
-
-file:///home/julianramirezj/Downloads/Untitled%20Diagram.drawio.png![image](https://user-images.githubusercontent.com/57159295/230107761-0fb433cf-9666-4e9d-bae9-33018cd7fa79.png)
 
 

@@ -1,8 +1,9 @@
 # Info de la materia: ST0263 Tópicos especiales en Telemática
 #
-# Estudiantes: Julian Andres Ramirez Jimenez, jaramirezj@eafit.edu.co
-               Samuel David Villegas Bedoya, sdvillegab@eafit.edu.co
-               Julian Giraldo Perez, jgiraldop@eafit.edu.co
+# Estudiantes:
+Julian Andres Ramirez Jimenez, jaramirezj@eafit.edu.co
+Samuel David Villegas Bedoya, sdvillegab@eafit.edu.co
+Julian Giraldo Perez, jgiraldop@eafit.edu.co
 #
 # Profesor: Edwin Nelson Montoya Munera, emontoya@eafit.edu.co
 #

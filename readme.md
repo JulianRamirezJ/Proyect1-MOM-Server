@@ -271,7 +271,10 @@ A continuación se presenta un codigo de ejemplo que sirve como guia para un usu
 
 ## Resultados o pantallazos (En producción)
         
-        
+![image](https://user-images.githubusercontent.com/110442546/231009220-543d6586-fc3f-48a5-a867-e4c4ce2f7c97.png)
+![image](https://user-images.githubusercontent.com/110442546/231009543-20f9a658-82b1-4ff2-a7b9-07250fab99e6.png)
+![image](https://user-images.githubusercontent.com/110442546/231009611-c09f1f94-f21a-4fbb-95ff-c6fe7716a6dd.png)
+
 
 # referencias:
 

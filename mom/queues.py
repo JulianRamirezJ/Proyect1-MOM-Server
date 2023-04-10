@@ -15,7 +15,7 @@ class Queue(config_pb2_grpc.QueueServiceServicer):
 
     def Create(self, request, context):
         if (check_key(request.key) and request.queue_name not in list(queues.keys())):
-            queues[request.queue_name] = {'creator': request.key, 'queue': [], 'subscribers':[request.key]}
+            queues[request.queue_name] = {'creator': request.key, 'queue': [], 'subscribers':[request.key], 'message_ids': []}
             print(queues)
             queue = QueueModel(request.queue_name,request.key)
             queue.save()

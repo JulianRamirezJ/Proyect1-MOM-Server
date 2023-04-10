@@ -1,0 +1,3 @@
+HOST_MOM="localhost"
+PORT_MOM=5000
+USER="1f9v48rg3u"

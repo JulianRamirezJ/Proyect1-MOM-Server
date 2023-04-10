@@ -13,5 +13,10 @@ def main():
     while(True):
         message = conn.consume_message_queue(queue_name='queue_request', enable_retry=True)
         data = json.loads(message)
-        print(data)
+        out = ''
+        if data["type"] == "list_files":
+            out = subprocess.run('./list_files.sh', stdout=subprocess.PIPE).stdout.decode('utf-8')
+        elif data["type"] == "find_files":
+            out = subprocess.run(['./find_files.sh',data["name"]], stdout=subprocess.PIPE).stdout.decode('utf-8')
+        conn.publish_message_queue(queue_name="queue_response",message=out)
 main()

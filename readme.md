@@ -177,7 +177,9 @@ Crear la instancia para el despliegue, y una vez creada clonar este respositorio
 Posterior a esto tendra que correr las migraciones siguiendo las instrucciones ubicadas en la carpeta /migrations
 
 Una vez tenga la base de datos montada debera correr la api y el mom, para esto corra el siguiente comando desde la carpeta fuente del repositorio
-         `python3 api/api.py & python3 mom/server.py`
+         ```
+         python3 api/api.py & python3 mom/server.py
+         ```
  
 NOTA: Asegurese de tener correctamente configurada la seguridad y puertos de la/las instancias
  
@@ -192,11 +194,11 @@ Dentro de la instancia donde desea crear la base de datos tendra que correr las 
 Una vez se tenga la base de datos tendra que cambiar la configuracion de la misma 
 
 Para esto configure el siguiente archivo y cambie el bind-adress a 0.0.0.0
-
+```
  sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
- 
+ ```
 Posteriormente tendra que crear un nuevo usuario para que nuestro otro servidor se conecte
-
+```
  sudo mysql
 
  CREATE USER 'username'@'localhost' IDENTIFIED BY 'password';
@@ -208,7 +210,7 @@ Posteriormente tendra que crear un nuevo usuario para que nuestro otro servidor 
  GRANT ALL PRIVILEGES ON *.* TO 'username'@'%' WITH GRANT OPTION;
 
  FLUSH PRIVILEGES;
- 
+ ```
  
 Esto completaria nuestra configuracion de la instancia de base de datos
  

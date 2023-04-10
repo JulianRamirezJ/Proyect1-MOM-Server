@@ -163,9 +163,60 @@ de nuestro MOM.
 
 # IP o nombres de dominio en nube o en la máquina servidor.
 
+El proyecto fue desplegado con AWS, la maquina que contiene el proyecto expone la api con la ip y puerto 34.203.88.198:5000
+
 
 ## Como se lanza el servidor.
     
+En caso de querer lanzar su propio servidor con la aplicacion tendra dos opciones las cuales se mostraran a continuacion.
+
+### Monolitico
+
+Crear la instancia para el despliegue, y una vez creada clonar este respositorio.
+
+Posterior a esto tendra que correr las migraciones siguiendo las instrucciones ubicadas en la carpeta /migrations
+
+Una vez tenga la base de datos montada debera correr la api y el mom, para esto corra el siguiente comando desde la carpeta fuente del repositorio
+ python3 api/api.py & python3 mom/server.py
+ 
+NOTA: Asegurese de tener correctamente configurada la seguridad y puertos de la/las instancias
+ 
+###Distribuido
+
+Para este despliegue se separaran la base de datos con el mom.
+
+Primero cree dos instancias y clone el respoitorio en ambas.
+
+Dentro de la instancia donde desea crear la base de datos tendra que correr las migraciones siguiendo las instrucciones ubicadas en la carpeta /migrations
+
+Una vez se tenga la base de datos tendra que cambiar la configuracion de la misma 
+
+Para esto configure el siguiente archivo y cambie el bind-adress a 0.0.0.0
+
+ sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+ 
+Posteriormente tendra que crear un nuevo usuario para que nuestro otro servidor se conecte
+
+ sudo mysql
+
+ CREATE USER 'username'@'localhost' IDENTIFIED BY 'password';
+
+ GRANT ALL PRIVILEGES ON *.* TO 'username'@'localhost' WITH GRANT OPTION;
+
+ CREATE USER 'username'@'%' IDENTIFIED BY 'password';
+
+ GRANT ALL PRIVILEGES ON *.* TO 'username'@'%' WITH GRANT OPTION;
+
+ FLUSH PRIVILEGES;
+ 
+ 
+Esto completaria nuestra configuracion de la instancia de base de datos
+ 
+Ahora en la instancia del mom server tendra que ir a los archivos de configuracion dentro de /migrations y /models, ingresar el host adecuado de la base de datos y el usuario creado anteriormente.
+ 
+Con esto estaria lista la configuracion del acercamiento distribuido
+
+NOTA: Asegurese de tener correctamente configurada la seguridad y puertos de la/las instancias
    
 ## Guia de como un usuario utilizaría el software o la aplicación
 

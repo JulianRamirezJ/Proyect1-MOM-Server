@@ -151,8 +151,10 @@ En las imagenes anteriores se puede ver como está organizado el codigo del proy
 Para el MOM son importantes las funcionalidades que proveen los directorios migrations y models, ya que estos le permiten realizar todo lo relacionado
 con la base de datos. Además como archivo principal en esta capa tenemos server.py  que es el que permite lanzar el MOM e inicializar las funcionalidades que
 este tiene.
+
 En cuanto a la API, podemos ver claramente que la estructura de directorios obedece a un Model-View Controller, donde las rutas contienen los endpoints. Para
 lanzar la API se usa el archivo api.py.
+
 En cuanto al cliente este consta simplemente de un archivo y simplemente basta con que un usuario final ponga este archivo en el directorio donde hará uso
 de nuestro MOM.
 

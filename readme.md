@@ -183,7 +183,7 @@ Una vez tenga la base de datos montada debera correr la api y el mom, para esto 
  
 NOTA: Asegurese de tener correctamente configurada la seguridad y puertos de la/las instancias
  
-###Distribuido
+### Distribuido
 
 Para este despliegue se separaran la base de datos con el mom.
 

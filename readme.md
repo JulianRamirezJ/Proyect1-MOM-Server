@@ -114,7 +114,7 @@ En resumen, nuestro Message-Oriented Middleware es una solución escalable y con
 ## Detalles del desarrollo
 
 El desarrollo se hizo de una manera ágil, en donde cada dia en una reunión se asignaban ciertas tareas a realizar por los integrantes
-del grupo y estos las desarrollaban duurante el dia. Esta froma de trabajo agilizó, mejoró la comunicación y nos permitió avanzar muy rapido 
+del grupo y estos las desarrollaban durante el dia. Esta froma de trabajo agilizó, mejoró la comunicación y nos permitió avanzar muy rapido 
 en el proyecto logrando hacer un producto funcional en alrededor de 1 semana. Cada integrante se especializó en una capa del proyecto, por ejemplo
 Julian Ramirez estuvo especialmente enfocado en la base de datos y el cliente, Julian Giraldo en la API y el manejo de los datos en memoria del MOM y
 Samuel Villegas en la integración de todos los componentes y la comunicación entre ellos.

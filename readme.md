@@ -217,6 +217,15 @@ Posteriormente tendra que crear un nuevo usuario para que nuestro otro servidor 
 Esto completaria nuestra configuracion de la instancia de base de datos
  
 Ahora en la instancia del mom server tendra que ir a los archivos de configuracion dentro de /migrations y /models, ingresar el host adecuado de la base de datos y el usuario creado anteriormente.
+
+Ademas ir al archivo de configuracion config_api en la carpeta api y poner el host como 0.0.0.0
+
+Finalmente correr la api y el mom
+
+         ```
+         python3 api/api.py & python3 mom/server.py
+         ```
+ 
  
 Con esto estaria lista la configuracion del acercamiento distribuido
 
